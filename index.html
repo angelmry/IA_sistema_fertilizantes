@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Asistente de Huerto - Recomendación de Fertilizantes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f3f5f0;
+      color: #1f2933;
+    }
+
+    header {
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      color: white;
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    header p {
+      margin: 0.2rem 0 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto 2rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .card h2 span {
+      font-size: 1.4rem;
+    }
+
+    .card p.desc {
+      margin-top: 0.2rem;
+      font-size: 0.9rem;
+      color: #4b5563;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      margin-top: 0.7rem;
+      margin-bottom: 0.2rem;
+      color: #374151;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      font-size: 0.9rem;
+      border-radius: 0.6rem;
+      border: 1px solid #d1d5db;
+      outline: none;
+      background: #f9fafb;
+    }
+
+    input:focus, select:focus {
+      border-color: #4caf50;
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.2);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      border: none;
+      background: #4caf50;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    button:hover {
+      background: #2e7d32;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    button.secondary:hover {
+      background: #d1d5db;
+    }
+
+    .result-box {
+      margin-top: 0.8rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 0.8rem;
+      background: #ecfdf3;
+      border: 1px solid #bbf7d0;
+      font-size: 0.9rem;
+    }
+
+    .result-box strong {
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .alert-error {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-left: 0.4rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      padding: 0.4rem 0.3rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+
+    .small-text {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-top: 0.3rem;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-bottom: 1rem;
+    }
+
+    code {
+      font-size: 0.78rem;
+      background: #f3f4f6;
+      padding: 0 0.25rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Asistente de Huerto</h1>
+  <p>Registra datos de tu parcela y recibe una recomendación de fertilizante.</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>
+      <span>🌱</span> Datos del cultivo
+      <span class="tag">Recomendación</span>
+    </h2>
+    <p class="desc">
+      Completa los datos del suelo y del cultivo. El sistema enviará esta
+      información a tu modelo en Python para recomendar un fertilizante.
+    </p>
+
+    <form id="formRecomendacion">
+      <label for="district">Distrito / zona</label>
+      <!-- valor por defecto -->
+      <input type="text" id="district" name="District_Name" placeholder="Ej: Kolhapur" value="Kolhapur" required />
+
+      <div class="grid-2">
+        <div>
+          <label for="soil">Color de suelo</label>
+          <select id="soil" name="Soil_color" required>
+            <option value="">Selecciona...</option>
+            <option value="Black" selected>Negro (Black)</option>
+            <option value="Red">Rojo (Red)</option>
+            <option value="Brown">Marrón (Brown)</option>
+            <option value="Other">Otro</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="crop">Cultivo</label>
+          <!-- valor por defecto -->
+          <input type="text" id="crop" name="Crop" placeholder="Ej: Sugarcane, Rice, Wheat..." value="Sugarcane" required />
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div>
+          <label for="nitrogen">Nitrógeno (N)</label>
+          <!-- valor por defecto -->
+          <input type="number" id="nitrogen" name="Nitrogen" step="0.01" value="50" required />
+        </div>
+        <div>
+          <label for="phosphorus">Fósforo (P)</label>
+          <input type="number" id="phosphorus" name="Phosphorus" step="0.01" value="40" required />
+        </div>
+        <div>
+          <label for="potassium">Potasio (K)</label>
+          <input type="number" id="potassium" name="Potassium" step="0.01" value="40" required />
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div>
+          <label for="ph">pH del suelo</label>
+          <input type="number" id="ph" name="pH" step="0.01" value="6.5" required />
+        </div>
+        <div>
+          <label for="rainfall">Lluvia (mm)</label>
+          <input type="number" id="rainfall" name="Rainfall" step="0.01" value="120" required />
+        </div>
+        <div>
+          <label for="temperature">Temperatura (°C)</label>
+          <input type="number" id="temperature" name="Temperature" step="0.01" value="25" required />
+        </div>
+      </div>
+
+      <button type="submit">🔍 Obtener recomendación</button>
+      <button type="button" class="secondary" id="btnGuardarRegistro">💾 Guardar registro local</button>
+    </form>
+
+    <div id="resultadoRecomendacion" class="result-box" style="display:none;"></div>
+    <div id="errorRecomendacion" class="result-box alert-error" style="display:none;"></div>
+
+    <p class="small-text">
+      Nota: este formulario envía los datos a un endpoint de tu backend en Python
+      (por ejemplo, <code>/api/predict</code>).
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>
+      <span>📊</span> Calidad del modelo
+      <span class="tag">resultados.json</span>
+    </h2>
+    <p class="desc">
+      Aquí puedes ver un resumen simple de la precisión del modelo y su desempeño.
+    </p>
+
+    <button type="button" id="btnCargarMetricas">📥 Cargar métricas de la IA</button>
+
+    <div id="metricasBox" class="result-box" style="display:none;"></div>
+    <div id="metricasTabla"></div>
+    <div id="metricasError" class="result-box alert-error" style="display:none;"></div>
+
+    <hr style="margin: 1.2rem 0 0.8rem; border: none; border-top: 1px solid #e5e7eb;" />
+
+    <h2 style="margin-top: 0.5rem;">
+      <span>📒</span> Registros locales del huerto
+    </h2>
+    <p class="desc">
+      Cada vez que pulses <strong>“Guardar registro local”</strong> el dato se
+      añadirá a esta tabla (solo en tu navegador).
+    </p>
+
+    <div class="small-text">
+      Ideal para llevar un control rápido de insumos y condiciones de campo.
+    </div>
+
+    <div id="tablaRegistrosContainer"></div>
+  </section>
+</main>
+
+<footer>
+  Interfaz HTML + JavaScript para sistema de recomendación de fertilizantes en huertos.
+</footer>
+
+<script>
+  const API_PREDICT_URL = "http://127.0.0.1:5000/api/predict";
+
+  const form = document.getElementById("formRecomendacion");
+  const resultadoDiv = document.getElementById("resultadoRecomendacion");
+  const errorDiv = document.getElementById("errorRecomendacion");
+
+  const registros = [];
+  const tablaRegistrosContainer = document.getElementById("tablaRegistrosContainer");
+
+  function leerDatosFormulario() {
+    return {
+      District_Name: document.getElementById("district").value.trim(),
+      Soil_color: document.getElementById("soil").value,
+      Nitrogen: parseFloat(document.getElementById("nitrogen").value),
+      Phosphorus: parseFloat(document.getElementById("phosphorus").value),
+      Potassium: parseFloat(document.getElementById("potassium").value),
+      pH: parseFloat(document.getElementById("ph").value),
+      Rainfall: parseFloat(document.getElementById("rainfall").value),
+      Temperature: parseFloat(document.getElementById("temperature").value),
+      Crop: document.getElementById("crop").value.trim()
+    };
+  }
+
+  function mostrarRecomendacion(texto, link) {
+    errorDiv.style.display = "none";
+    resultadoDiv.style.display = "block";
+    resultadoDiv.innerHTML = `
+      <strong>Recomendación:</strong>
+      <div>${texto}</div>
+      ${link ? `<div class="small-text">Recurso: <a href="${link}" target="_blank">${link}</a></div>` : ""}
+    `;
+  }
+
+  function mostrarError(mensaje) {
+    resultadoDiv.style.display = "none";
+    errorDiv.style.display = "block";
+    errorDiv.textContent = mensaje;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const datos = leerDatosFormulario();
+
+    try {
+      const resp = await fetch(API_PREDICT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+      });
+
+      if (!resp.ok) throw new Error("No se pudo obtener la recomendación.");
+
+      const data = await resp.json();
+
+      const fert = data.fertilizer || "Desconocido";
+      const explicacion = data.explicacion || "No se generó explicación.";
+
+      mostrarRecomendacion(`
+          <strong>Recomendación:</strong> ${fert}<br><br>
+          <strong>Explicación de la IA:</strong><br>
+          ${explicacion}
+      `);
+
+    } catch (err) {
+      mostrarError("Error al conectar con el backend.");
+    }
+  });
+
+  document.getElementById("btnGuardarRegistro").addEventListener("click", () => {
+    const datos = leerDatosFormulario();
+    registros.push({ ...datos, fecha: new Date().toLocaleString() });
+    renderTablaRegistros();
+  });
+
+  function renderTablaRegistros() {
+    if (registros.length === 0) {
+      tablaRegistrosContainer.innerHTML = "<p class='small-text'>Aún no hay registros guardados.</p>";
+      return;
+    }
+
+    let html = `
+      <div style="max-height: 220px; overflow:auto; margin-top:0.6rem;">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Distrito</th>
+            <th>Suelo</th>
+            <th>Cultivo</th>
+            <th>N</th>
+            <th>P</th>
+            <th>K</th>
+            <th>pH</th>
+            <th>Lluvia</th>
+            <th>T (°C)</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    for (const r of registros) {
+      html += `
+        <tr>
+          <td>${r.fecha}</td>
+          <td>${r.District_Name}</td>
+          <td>${r.Soil_color}</td>
+          <td>${r.Crop}</td>
+          <td>${r.Nitrogen}</td>
+          <td>${r.Phosphorus}</td>
+          <td>${r.Potassium}</td>
+          <td>${r.pH}</td>
+          <td>${r.Rainfall}</td>
+          <td>${r.Temperature}</td>
+        </tr>
+      `;
+    }
+
+    html += `</tbody></table></div>`;
+    tablaRegistrosContainer.innerHTML = html;
+  }
+
+  const btnCargarMetricas = document.getElementById("btnCargarMetricas");
+  const metricasBox = document.getElementById("metricasBox");
+  const metricasTabla = document.getElementById("metricasTabla");
+  const metricasError = document.getElementById("metricasError");
+
+  btnCargarMetricas.addEventListener("click", async () => {
+    metricasError.style.display = "none";
+    metricasBox.style.display = "none";
+    metricasTabla.innerHTML = "";
+
+    try {
+      const resp = await fetch("resultados.json");
+      if (!resp.ok) throw new Error();
+
+      const data = await resp.json();
+      const accuracy = (data.accuracy * 100).toFixed(2);
+
+      metricasBox.style.display = "block";
+      
+
+      const report = data.classification_report || {};
+      let filas = [];
+
+      for (const [key, value] of Object.entries(report)) {
+        if (["accuracy", "macro avg", "weighted avg"].includes(key)) continue;
+
+        filas.push({
+          nombre: key,
+          precision: (value.precision * 100).toFixed(1),
+          recall: (value.recall * 100).toFixed(1),
+          f1: (value["f1-score"] * 100).toFixed(1),
+          support: value.support
+        });
+      }
+
+      filas.sort((a, b) => b.support - a.support);
+
+      let html = `
+        <h3 style="margin-top:0.9rem; font-size:0.95rem;">Desempeño por fertilizante</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Fertilizante</th>
+              <th>Precisión (%)</th>
+              <th>Aciertos (%)</th>
+              <th>Casos</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      for (const f of filas) {
+        html += `
+          <tr>
+            <td>${f.nombre}</td>
+            <td>${f.precision}</td>
+            <td>${f.recall}</td>
+            <td>${f.support}</td>
+          </tr>
+        `;
+      }
+
+      html += "</tbody></table>";
+      metricasTabla.innerHTML = html;
+
+    } catch {
+      metricasError.style.display = "block";
+      metricasError.textContent = "No se pudo cargar resultados.json";
+    }
+  });
+
+  // render inicial de la tabla (vacía)
+  renderTablaRegistros();
+</script>
+
+</body>
+</html>
