@@ -1,0 +1,132 @@
+{
+    "accuracy": 0.9413067552602437,
+    "classification_report": {
+        "10:10:10 NPK": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 10.0
+        },
+        "10:26:26 NPK": {
+            "precision": 0.8125,
+            "recall": 0.8387096774193549,
+            "f1-score": 0.8253968253968254,
+            "support": 31.0
+        },
+        "12:32:16 NPK": {
+            "precision": 0.84,
+            "recall": 1.0,
+            "f1-score": 0.9130434782608695,
+            "support": 21.0
+        },
+        "13:32:26 NPK": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 13.0
+        },
+        "18:46:00 NPK": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 1.0
+        },
+        "19:19:19 NPK": {
+            "precision": 0.9791666666666666,
+            "recall": 0.9791666666666666,
+            "f1-score": 0.9791666666666666,
+            "support": 96.0
+        },
+        "20:20:20 NPK": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 3.0
+        },
+        "50:26:26 NPK": {
+            "precision": 0.96,
+            "recall": 0.96,
+            "f1-score": 0.96,
+            "support": 25.0
+        },
+        "Ammonium Sulphate": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 10.0
+        },
+        "Chilated Micronutrient": {
+            "precision": 0.8461538461538461,
+            "recall": 1.0,
+            "f1-score": 0.9166666666666666,
+            "support": 22.0
+        },
+        "DAP": {
+            "precision": 0.9411764705882353,
+            "recall": 0.9552238805970149,
+            "f1-score": 0.9481481481481482,
+            "support": 134.0
+        },
+        "Ferrous Sulphate": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 14.0
+        },
+        "Hydrated Lime": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 5.0
+        },
+        "MOP": {
+            "precision": 0.9375,
+            "recall": 0.9210526315789473,
+            "f1-score": 0.9292035398230089,
+            "support": 114.0
+        },
+        "Magnesium Sulphate": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 43.0
+        },
+        "SSP": {
+            "precision": 0.9,
+            "recall": 0.8674698795180723,
+            "f1-score": 0.8834355828220859,
+            "support": 83.0
+        },
+        "Sulphur": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 1.0
+        },
+        "Urea": {
+            "precision": 0.9621212121212122,
+            "recall": 0.9304029304029304,
+            "f1-score": 0.9459962756052142,
+            "support": 273.0
+        },
+        "White Potash": {
+            "precision": 0.5714285714285714,
+            "recall": 1.0,
+            "f1-score": 0.7272727272727273,
+            "support": 4.0
+        },
+        "accuracy": 0.9413067552602437,
+        "macro avg": {
+            "precision": 0.9342129877346597,
+            "recall": 0.9711592455885782,
+            "f1-score": 0.9488594689822216,
+            "support": 903.0
+        },
+        "weighted avg": {
+            "precision": 0.9436105613167369,
+            "recall": 0.9413067552602437,
+            "f1-score": 0.9417499049974185,
+            "support": 903.0
+        }
+    }
+}
