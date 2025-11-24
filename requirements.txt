@@ -4,5 +4,5 @@ joblib
 numpy
 pandas
 scikit-learn
-ollama
 gunicorn
+ollama

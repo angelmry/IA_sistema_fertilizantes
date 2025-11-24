@@ -37,9 +37,16 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # -----------------------------
-# 5. Entrenamiento
+# 5. Entrenamiento (Balanceado y Mejorado)
 # -----------------------------
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf = RandomForestClassifier(
+    n_estimators=300,
+    max_depth=15,
+    min_samples_split=4,
+    class_weight='balanced',
+    random_state=42
+)
+
 clf.fit(X_train, y_train)
 
 # -----------------------------
@@ -55,7 +62,7 @@ print("Accuracy:", accuracy)
 # 7. Guardar modelo y label encoders
 # -----------------------------
 joblib.dump(clf, "fertilizer_prediction_model.pkl")
-joblib.dump(le_dict, "label_encoders.pkl")   # <--- **importante**
+joblib.dump(le_dict, "label_encoders.pkl")
 
 print("\nGuardado modelo y encoders correctamente.")
 

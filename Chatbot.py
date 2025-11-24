@@ -2,11 +2,10 @@
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
-import json
 from ollama import Client
 
 # -----------------------------
-# 0. Configuración de la API de Ollama
+# Configuración de la API
 # -----------------------------
 client = Client(
     host="https://ollama.com",
@@ -15,9 +14,8 @@ client = Client(
 
 OLLAMA_MODEL = "gpt-oss:120b"
 
-
 # -----------------------------
-# 1. Función para enviar prompt al LLM vía Cloud
+# 1. Enviar prompt al LLM
 # -----------------------------
 def enviar_a_llm_api(prompt):
     try:
@@ -31,62 +29,44 @@ def enviar_a_llm_api(prompt):
     except Exception as e:
         return f"Error al comunicarse con Ollama Cloud: {e}"
 
-
-# -----------------------------
-# 2. Leer resultados JSON
-# -----------------------------
-def leer_resultados_json(file_path="resultados.json"):
-    try:
-        with open(file_path, "r") as f:
-            data = json.load(f)
-        return data
-    except Exception as e:
-        print(f"Error al leer el JSON: {e}")
-        return None
-
-
 # ---------------------------------------------------
-# 3. FUNCIÓN QUE USARÁ FLASK → generar_explicacion()
+# 2. FUNCIÓN PRINCIPAL → generar_explicacion()
 # ---------------------------------------------------
-def generar_explicacion():
+def generar_explicacion(
+    fertilizer, district, soil, crop,
+    nitrogen, phosphorus, potassium,
+    ph, rainfall, temperature
+):
     """
-    ✔ Lee el JSON
-    ✔ Envía prompt a Ollama
-    ✔ Devuelve texto (NO imprime)
-    ✔ Puede ser llamado desde app.py
+    Genera una explicación breve basada en los datos reales ingresados por el usuario.
     """
-    data = leer_resultados_json()
-    if not data:
-        return "No se pudo cargar resultados.json"
 
-    # Prompt simple para agricultores
     prompt = f"""
-Explica estos resultados de IA de forma MUY simple, como si hablaras con un agricultor.
+    Eres un asesor agrícola. Usa estos datos internos para tu análisis pero NO los menciones en tu respuesta:
+    Distrito={district}, Suelo={soil}, Cultivo={crop},
+    N={nitrogen}, P={phosphorus}, K={potassium},
+    pH={ph}, Lluvia={rainfall}, Temperatura={temperature}
 
-Quiero SOLO este formato:
+    RESPONDE SOLO EN ESTE FORMATO, RESPETANDO LOS SALTOS DE LÍNEA:
 
-¿Qué significa?
-[respuesta breve]
+    ¿Qué significa?
+    - respuesta breve
 
-¿Cuándo puede fallar?
-[respuesta breve]
+    ¿Por qué se recomienda este fertilizante?
+    - respuesta breve
 
-Datos de la IA:
-Accuracy: {data['accuracy']}
-Reporte por clase:
-{json.dumps(data['classification_report'], indent=4)}
-"""
+    ¿Cómo aplicarlo correctamente?
+    - respuesta breve
 
-    respuesta = enviar_a_llm_api(prompt)
-    return respuesta
+    Advertencia (si aplica):
+    - respuesta breve o "Ninguna"
+    """
+
+    return enviar_a_llm_api(prompt)
 
 
 # -----------------------------
-# 4. Ejecutar chatbot manualmente (solo consola)
+# Modo consola
 # -----------------------------
-def chatbot():
-    print(generar_explicacion())
-
-
 if __name__ == "__main__":
-    chatbot()
+    print(generar_explicacion("Urea"))
